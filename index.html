@@ -10,7 +10,11 @@
 </head>
 <body class="bg-stone-700 text-stone-300 min-h-screen font-mono">
 <section class="flex flex-col justify-between h-full min-h-screen px-5 py-4">
-    <header class="flex justify-end">
+    <header class="flex justify-between">
+        <div>
+            <input type="checkbox" name="case-sensitive" id="case-sensitive">
+            <label for="case-sensitive">Case sensitive</label>
+        </div>
         <div>
             <p id="score">5/5</p>
             <time id="time"></time>
@@ -20,7 +24,7 @@
     </header>
     <div class="w-full flex-1 flex justify-center items-center">
         <div id="key" class="w-44 h-44 bg-stone-300 flex items-center justify-center rounded-xl select-none">
-            <p class="text-8xl text-stone-600 uppercase" id="key-text">
+            <p class="text-8xl text-stone-600" id="key-text">
             </p>
         </div>
     </div>

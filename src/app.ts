@@ -51,7 +51,14 @@ const MILLISECONDS = {
 	HOUR: 60 * 60 * 1000,
 }
 
-const TERMINATING_KEY = "Escape"
+const TERMINATING_KEY = "Escape";
+
+const MODE_STORAGE_KEYS = {
+	"CASE_SENSITIVE": "case-sensitive",
+}
+
+const isCaseSensitive = localStorage.getItem(MODE_STORAGE_KEYS.CASE_SENSITIVE) === "true";
+
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -103,11 +110,30 @@ if (!isDomElementAvailable(time, HTMLTimeElement)) {
 }
 
 const charactersPerMinute = document.querySelector("#cpm");
+if (!isDomElementAvailable(charactersPerMinute, HTMLElement)) {
+	throw new Error("charactersPerMinute is not available");
+}
+
+const caseSensitiveCheckbox = document.querySelector("#case-sensitive");
+if (!isDomElementAvailable(caseSensitiveCheckbox, HTMLInputElement)) {
+	throw new Error("caseSensitiveCheckbox is not available");
+}
+
+caseSensitiveCheckbox.checked = isCaseSensitive;
+
+caseSensitiveCheckbox.addEventListener("change", (event) => {
+	localStorage.setItem(MODE_STORAGE_KEYS.CASE_SENSITIVE, (event.currentTarget as HTMLInputElement).checked.toString());
+})
 
 
 let chosenKey = getRandomKey();
+let isUpperCase = Math.random() > 0.5;
 let chosenFinger = KEY_FINGER_MAP[chosenKey];
-keyText.textContent = chosenKey;
+if (isUpperCase && isCaseSensitive) {
+	keyText.textContent = chosenKey.toUpperCase();
+} else {
+	keyText.textContent = chosenKey.toLowerCase();
+}
 fingerElements[chosenFinger].classList.add("!bg-red-500");
 
 let keysShown = 1;
@@ -121,7 +147,7 @@ charactersPerMinute.textContent = "0";
 
 
 document.addEventListener("keyup", (event) => {
-	if (event.key === "Meta") {
+	if (event.key === "Meta" || event.key === "Control" || event.key === "Alt" || event.key === "Shift") {
 		return;
 	}
 	if (event.key === TERMINATING_KEY && intervalId !== undefined) {
@@ -139,11 +165,17 @@ document.addEventListener("keyup", (event) => {
 			charactersPerMinute.textContent = cpm.toString();
 		}, 1000)
 	}
-	if (event.key === chosenKey) {
+	const correctValue = isUpperCase && isCaseSensitive ? chosenKey.toUpperCase() : chosenKey.toLowerCase();
+	if (event.key === correctValue) {
 		fingerElements[chosenFinger].classList.remove("!bg-red-500");
 		const newKey = getRandomKey();
+		isUpperCase = Math.random() > 0.5;
 		const newFinger = KEY_FINGER_MAP[newKey];
-		keyText.textContent = newKey;
+		if (isUpperCase && isCaseSensitive) {
+			keyText.textContent = newKey.toUpperCase();
+		} else {
+			keyText.textContent = newKey.toLowerCase();
+		}
 		fingerElements[newFinger].classList.add("!bg-red-500");
 		chosenKey = newKey;
 		chosenFinger = newFinger;
