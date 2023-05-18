@@ -120,9 +120,20 @@ if (!isDomElementAvailable(caseSensitiveCheckbox, HTMLInputElement)) {
 }
 
 caseSensitiveCheckbox.checked = isCaseSensitive;
+if (isCaseSensitive) {
+	keyText.classList.remove("uppercase");
+} else {
+	keyText.classList.add("uppercase");
+}
 
 caseSensitiveCheckbox.addEventListener("change", (event) => {
-	localStorage.setItem(MODE_STORAGE_KEYS.CASE_SENSITIVE, (event.currentTarget as HTMLInputElement).checked.toString());
+	const isCaseSensitive = (event.currentTarget as HTMLInputElement).checked;
+	if (isCaseSensitive) {
+		keyText.classList.remove("uppercase");
+	} else {
+		keyText.classList.add("uppercase");
+	}
+	localStorage.setItem(MODE_STORAGE_KEYS.CASE_SENSITIVE, isCaseSensitive.toString());
 })
 
 
