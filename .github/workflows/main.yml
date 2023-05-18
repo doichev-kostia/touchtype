@@ -5,13 +5,19 @@ on:
     branches:
       - master
 
-permissions:
-  contents: write
-
 jobs:
   build-and-deploy:
     concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
     runs-on: ubuntu-latest
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+      # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -42,8 +48,11 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           path: '.'
+          name: 'github-pages'
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
+        with:
+          artifact-name: github-pages
 
