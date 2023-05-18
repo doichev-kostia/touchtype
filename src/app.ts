@@ -45,6 +45,14 @@ const KEY_FINGER_MAP: Record<string, KeyFinger> = {
 
 const KEYS = Object.keys(KEY_FINGER_MAP);
 
+const MILLISECONDS = {
+	SECOND: 1000,
+	MINUTE: 60 * 1000,
+	HOUR: 60 * 60 * 1000,
+}
+
+const TERMINATING_KEY = "Escape"
+
 type Constructor<T> = new (...args: any[]) => T;
 
 function isDomElementAvailable<E extends HTMLElement>(element: unknown, target: Constructor<E>): element is E {
@@ -84,6 +92,17 @@ if (!isDomElementAvailable(keyText, HTMLParagraphElement)) {
 }
 
 const fingerElements = getFingerElements();
+const score = document.querySelector("#score");
+if (!isDomElementAvailable(score, HTMLParagraphElement)) {
+	throw new Error("score is not available");
+}
+
+const time = document.querySelector("#time");
+if (!isDomElementAvailable(time, HTMLTimeElement)) {
+	throw new Error("time is not available");
+}
+
+const charactersPerMinute = document.querySelector("#cpm");
 
 
 let chosenKey = getRandomKey();
@@ -91,8 +110,35 @@ let chosenFinger = KEY_FINGER_MAP[chosenKey];
 keyText.textContent = chosenKey;
 fingerElements[chosenFinger].classList.add("!bg-red-500");
 
+let keysShown = 1;
+let keysCorrect = 0;
+let now: number | undefined = undefined;
+let intervalId: number | undefined = undefined;
+
+score.textContent = `${keysCorrect}/${keysShown}`;
+time.textContent = "00:00";
+charactersPerMinute.textContent = "0";
+
 
 document.addEventListener("keyup", (event) => {
+	if (event.key === "Meta") {
+		return;
+	}
+	if (event.key === TERMINATING_KEY && intervalId !== undefined) {
+		clearInterval(intervalId);
+		return;
+	}
+	if (now === undefined) {
+		now = Date.now();
+		intervalId = setInterval(() => {
+			const timePassed = Date.now() - now!;
+			const minutes = Math.floor(timePassed / MILLISECONDS.MINUTE);
+			const seconds = Math.floor((timePassed % MILLISECONDS.MINUTE) / MILLISECONDS.SECOND);
+			time.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+			const cpm = Math.floor((keysCorrect / timePassed) * MILLISECONDS.MINUTE);
+			charactersPerMinute.textContent = cpm.toString();
+		}, 1000)
+	}
 	if (event.key === chosenKey) {
 		fingerElements[chosenFinger].classList.remove("!bg-red-500");
 		const newKey = getRandomKey();
@@ -101,10 +147,14 @@ document.addEventListener("keyup", (event) => {
 		fingerElements[newFinger].classList.add("!bg-red-500");
 		chosenKey = newKey;
 		chosenFinger = newFinger;
+		keysCorrect += 1;
 	} else {
 		keyContainer.classList.add("error");
 		setTimeout(() => {
 			keyContainer.classList.remove("error");
 		}, 500);
 	}
+
+	keysShown += 1;
+	score.textContent = `${keysCorrect}/${keysShown}`;
 });

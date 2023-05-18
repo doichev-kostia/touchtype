@@ -10,6 +10,14 @@
 </head>
 <body class="bg-stone-700 text-stone-300 min-h-screen font-mono">
 <section class="flex flex-col justify-between h-full min-h-screen px-5 py-4">
+    <header class="flex justify-end">
+        <div>
+            <p id="score">5/5</p>
+            <time id="time"></time>
+            <p><span id="cpm"></span> characters per minute</p>
+            <p>Press ESC to stop</p>
+        </div>
+    </header>
     <div class="w-full flex-1 flex justify-center items-center">
         <div id="key" class="w-44 h-44 bg-stone-300 flex items-center justify-center rounded-xl select-none">
             <p class="text-8xl text-stone-600 uppercase" id="key-text">
