@@ -157,7 +157,7 @@ time.textContent = "00:00";
 charactersPerMinute.textContent = "0";
 
 
-document.addEventListener("keyup", (event) => {
+document.addEventListener("keydown", (event) => {
 	if (event.key === "Meta" || event.key === "Control" || event.key === "Alt" || event.key === "Shift") {
 		return;
 	}
