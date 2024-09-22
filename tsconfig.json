@@ -1,6 +1,14 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
-    "target": "ESNext",
-  }
+    "module": "NodeNext",
+    "target": "esnext",
+    "noEmit": true,
+    "lib": ["DOM", "ES2023"],
+    "moduleResolution": "nodenext",
+    "allowJs": true,
+    "checkJs": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": "."
+  },
+  "include": ["./src/**/*"]
 }

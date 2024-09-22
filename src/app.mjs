@@ -1,9 +1,7 @@
-type Finger = "thumb" | "index" | "middle" | "ring" | "pinky";
-type Hand = "left" | "right";
-
-type KeyFinger = `${Hand}-${Finger}`;
-
-const keyFingers: KeyFinger[] = [
+/**
+ * @type {KeyFinger[]} 
+ */
+const keyFingers = [
 	"left-index",
 	"left-middle",
 	"left-ring",
@@ -14,7 +12,10 @@ const keyFingers: KeyFinger[] = [
 	"right-pinky",
 ];
 
-const KEY_FINGER_MAP: Record<string, KeyFinger> = {
+/**
+ * @type {Record<string, KeyFinger>}
+ */
+const KEY_FINGER_MAP  = {
 	"q": "left-pinky",
 	"w": "left-ring",
 	"e": "left-middle",
@@ -60,23 +61,29 @@ const MODE_STORAGE_KEYS = {
 const isCaseSensitive = localStorage.getItem(MODE_STORAGE_KEYS.CASE_SENSITIVE) === "true";
 
 
-type Constructor<T> = new (...args: any[]) => T;
-
-function isDomElementAvailable<E extends HTMLElement>(element: unknown, target: Constructor<E>): element is E {
+function isDomElementAvailable(element, target) {
 	return element instanceof target;
 }
 
-function getRandomInteger(min: number, max: number): number {
+/*
+ *	@param {number} min
+ *	@param {number} max
+ *	@returns {number}
+ */
+function getRandomInteger(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getRandomKey(): string {
+/** @returns {string} */
+function getRandomKey() {
 	const index = getRandomInteger(0, KEYS.length - 1);
 	return KEYS[index];
 }
 
-function getFingerElements(): Record<KeyFinger, HTMLElement> {
-	const fingerElements: Record<KeyFinger, HTMLElement> = {} as Record<KeyFinger, HTMLElement>;
+/** @returns {Record<KeyFinger, HTMLElement>} */
+function getFingerElements()  {
+	/** @type {Record<KeyFinger, HTMLElement>} */
+	const fingerElements = {};
 	keyFingers.forEach((finger) => {
 		const fingerElement = document.querySelector(`#${finger}`);
 		if (!isDomElementAvailable(fingerElement, HTMLElement)) {
@@ -127,7 +134,7 @@ if (isCaseSensitive) {
 }
 
 caseSensitiveCheckbox.addEventListener("change", (event) => {
-	const isCaseSensitive = (event.currentTarget as HTMLInputElement).checked;
+	const isCaseSensitive = event.currentTarget.checked;
 	if (isCaseSensitive) {
 		keyText.classList.remove("uppercase");
 	} else {
@@ -149,8 +156,10 @@ fingerElements[chosenFinger].classList.add("!bg-red-500");
 
 let keysShown = 1;
 let keysCorrect = 0;
-let now: number | undefined = undefined;
-let intervalId: number | undefined = undefined;
+/** @type {number | undefined} */
+let now = undefined;
+/** @type {number | undefined} */
+let intervalId = undefined;
 
 score.textContent = `${keysCorrect}/${keysShown}`;
 time.textContent = "00:00";
@@ -168,7 +177,7 @@ document.addEventListener("keydown", (event) => {
 	if (now === undefined) {
 		now = Date.now();
 		intervalId = setInterval(() => {
-			const timePassed = Date.now() - now!;
+			const timePassed = Date.now() - now;
 			const minutes = Math.floor(timePassed / MILLISECONDS.MINUTE);
 			const seconds = Math.floor((timePassed % MILLISECONDS.MINUTE) / MILLISECONDS.SECOND);
 			time.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
@@ -179,7 +188,11 @@ document.addEventListener("keydown", (event) => {
 	const correctValue = isUpperCase && isCaseSensitive ? chosenKey.toUpperCase() : chosenKey.toLowerCase();
 	if (event.key === correctValue) {
 		fingerElements[chosenFinger].classList.remove("!bg-red-500");
-		const newKey = getRandomKey();
+		let newKey;
+		do {
+			newKey = getRandomKey();
+		} while(newKey == chosenKey);
+	
 		isUpperCase = Math.random() > 0.5;
 		const newFinger = KEY_FINGER_MAP[newKey];
 		if (isUpperCase && isCaseSensitive) {
