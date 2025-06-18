@@ -1,0 +1,11 @@
+{
+  "name": "type-fast",
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "tailwindcss": "^4.1.10"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.10"
+  }
+}

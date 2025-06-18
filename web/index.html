@@ -12,8 +12,14 @@
 <section class="flex flex-col justify-between h-full min-h-screen px-5 py-4">
     <header class="flex justify-between">
         <div>
-            <input type="checkbox" name="case-sensitive" id="case-sensitive">
-            <label for="case-sensitive">Case sensitive</label>
+            <label for="keyset" class="block text-sm/6 font-medium text-stone-300">Mode</label>
+            <div class="mt-2 grid grid-cols-1">
+                <select id="keyset" name="keyset" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-stone-300 py-1.5 pr-8 pl-3 text-base text-stone-600 outline-1 -outline-offset-1 outline-stone-600 focus:outline-2 focus:-outline-offset-2 focus:outline-stone-600 sm:text-sm/6">
+                </select>
+                <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-stone-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                    <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                </svg>
+            </div>
         </div>
         <div>
             <p id="score">5/5</p>
@@ -35,10 +41,12 @@
                 <li id="left-ring" class="w-10 h-10 bg-amber-500 rounded-full"></li>
                 <li id="left-middle" class="w-10 h-10 bg-amber-500 rounded-full"></li>
                 <li id="left-index" class="w-10 h-10 bg-amber-500 rounded-full"></li>
+                <li id="left-thumb" class="w-10 h-10 bg-amber-500 rounded-full"></li>
             </ul>
         </div>
         <div>
             <ul class="flex gap-3">
+                <li id="right-thumb" class="w-10 h-10 bg-amber-500 rounded-full"></li>
                 <li id="right-index" class="w-10 h-10 bg-amber-500 rounded-full"></li>
                 <li id="right-middle" class="w-10 h-10 bg-amber-500 rounded-full"></li>
                 <li id="right-ring" class="w-10 h-10 bg-amber-500 rounded-full"></li>
