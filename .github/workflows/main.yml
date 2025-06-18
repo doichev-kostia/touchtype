@@ -25,12 +25,10 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
-      - run: cd web
-
-      - run: make build
+      - run: make -C ./web build
 
       - name: remove node_modules
-        run: rm -rf node_modules
+        run: rm -rf ./web/node_modules
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
