@@ -35,9 +35,17 @@ function main() {
 		renderingContainer.keyText.focus();
 	});
 
+	// Prevent common navigation/browser keys
+	const preventKeys = ['Tab', '/', "'", 'F1', 'F3', 'F5', "F7", 'F11', 'F12'];
 	document.addEventListener("keydown", (event) => {
-		if (event.key === "Meta" || event.key === "Control" || event.key === "Alt" || event.key === "Shift") {
-			return;
+		if (game.keyset !== Game.Keyset.SpecialKeys) {
+			if (event.key === "Meta" || event.key === "Control" || event.key === "Alt" || event.key === "Shift") {
+				return;
+			}
+		}
+		if (preventKeys.includes(event.key)) {
+			event.preventDefault();
+			event.stopPropagation();
 		}
 		if (event.key === Game.TerminatingKey) {
 			Game.stop(game);

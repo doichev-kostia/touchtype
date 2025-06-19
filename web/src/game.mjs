@@ -40,63 +40,105 @@ const KeyFingers = [
  */
 const KeyFingerMap = {
     /* Left pinky */
+    "F1": "left-pinky",
     "=": "left-pinky",
     "+": "left-pinky",
-    "tab": "left-pinky",
+    "Tab": "left-pinky",
+    "Escape": "left-pinky",
     "`": "left-pinky",
     "~": "left-pinky",
+    "F2": "left-pinky",
     "1": "left-pinky",
+    "!": "left-pinky",
     "q": "left-pinky",
     "a": "left-pinky",
     "z": "left-pinky",
     /* Left pinky */
 
     /* Left ring */
+    "F3": "left-ring",
     "2": "left-ring",
+    "@": "left-ring",
     "w": "left-ring",
     "s": "left-ring",
     "x": "left-ring",
     /* Left ring */
 
     /* Left middle */
+    "F4": "left-middle",
     "3": "left-middle",
+    "#": "left-middle",
     "e": "left-middle",
     "d": "left-middle",
     "c": "left-middle",
+    "F11": "right-index", // --> 2nd layer
+    "ArrowLeft": "left-middle",
     /* Left middle */
 
     /* Left index */
+    "F5": "left-index",
     "4": "left-index",
+    "$": "left-index",
     "r": "left-index",
     "f": "left-index",
     "v": "left-index",
+    "F12": "right-index", // --> 2nd layer
+    "ArrowRight": "left-index",
     "5": "left-index",
+    "%": "left-index",
     "t": "left-index",
     "g": "left-index",
     "b": "left-index",
     /* Left index */
 
+    /* Left thumb */
+    "Shift": "left-thumb",
+    "Backspace": "left-thumb",
+    "Meta": "left-thumb",
+    "Delete": "left-thumb",
+    "Alt": "left-thumb",
+    /* Left thumb */
+
+    /* Right thumb */
+    "Control": "right-thumb",
+    // "Alt": "right-thumb",
+    // "Meta": "right-thumb",
+    "Enter": "right-thumb",
+    // "Shift": "right-thumb",
+    "Space": "right-thumb",
+    /* right thumb */
+
+
     /* Right index */
     "6": "right-index",
+    "^": "right-index",
     "y": "right-index",
     "h": "right-index",
     "n": "right-index",
+    "F6": "right-index",
     "7": "right-index",
+    "&": "right-index",
     "u": "right-index",
     "j": "right-index",
     "m": "right-index",
+    "ArrowDown": "right-index",
     /* Right index */
 
     /* Right middle */
+    "F7": "right-middle",
     "8": "right-middle",
+    "*": "right-middle",
     "i": "right-middle",
     "k": "right-middle",
     ",": "right-middle",
     "<": "right-middle",
+    "ArrowUp": "right-middle",
     /* Right middle */
 
     /* Right ring */
+    "F8": "right-ring",
     "9": "right-ring",
+    "(": "right-ring",
     "o": "right-ring",
     "l": "right-ring",
     ".": "right-ring",
@@ -106,7 +148,9 @@ const KeyFingerMap = {
     /* Right ring */
 
     /* Right pinky */
+    "F9": "right-pinky",
     "0": "right-pinky",
+    ")": "right-pinky",
     "p": "right-pinky",
     ";": "right-pinky",
     ":": "right-pinky",
@@ -114,12 +158,15 @@ const KeyFingerMap = {
     "?": "right-pinky",
     "]": "right-pinky",
     "}": "right-pinky",
+    "F10": "right-pinky",
     "-": "right-pinky",
     "_": "right-pinky",
     "\\": "right-pinky",
     "|": "right-pinky",
     "'": "right-pinky",
     "\"": "right-pinky",
+    "PageUp": "right-pinky",
+    "PageDown": "right-pinky",
     /* Right pinky */
 };
 
@@ -137,7 +184,7 @@ const Keys = {
         "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
     ],
     [Keyset.Symbols]: [
-        "`", "~", "-", "_", "+",
+        "`", "~", "-", "_", "+", "=",
         "[", "]",
         "{", "}",
         ";", ":",
@@ -145,9 +192,12 @@ const Keys = {
         ",", ".",
         "<", ">",
         "/", "?",
+        "\\", "|",
     ],
     [Keyset.SpecialKeys]: [
-
+        // "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",
+        "Tab", "Shift", "Enter", "Backspace", "Delete", "Meta", "Control", "Alt",
+        "Space", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
     ],
     [Keyset.Alphanumeric]: [
         "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
@@ -283,6 +333,9 @@ function selectKey(game) {
  * @returns {boolean}
  */
 function verifyKey(game, key) {
+    if (key === " ") {
+        key = "Space"
+    }
     return game.selectedKey === key
 }
 
@@ -306,7 +359,18 @@ function registerKeypress(game) {
  * @returns {string}
  */
 function displayKey(game) {
-    return game.selectedKey; // todo: apply modifiers
+    // todo: apply modifiers
+    if (game.selectedKey === "ArrowUp") {
+        return "↑";
+    } else if (game.selectedKey === "ArrowDown") {
+        return "↓";
+    } else if (game.selectedKey === "ArrowLeft") {
+        return "←";
+    } else if (game.selectedKey === "ArrowRight") {
+        return "→";
+    } else {
+        return game.selectedKey;
+    }
 }
 
 /**
