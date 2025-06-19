@@ -14,6 +14,7 @@ type Game = {
 	keyset: string,
 	keysShown: number,
 	keysCorrect: number,
+	keysPressed: number,
 	startTimeMillis: number,
 	elapsedMillis: number,
 	clock: Clock,

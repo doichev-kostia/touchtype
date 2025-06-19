@@ -202,6 +202,7 @@ function create(clock) {
         startTimeMillis: clock.getCurrentMillis(),
         keysShown: 0,
         keysCorrect: 0,
+        keysPressed: 0,
         clock,
         selectedKey: "",
         modifiers: 0
@@ -294,6 +295,14 @@ function registerSuccessfulKeypress(game) {
 
 /**
  * @param {Game} game
+ */
+function registerKeypress(game) {
+    game.keysPressed += 1;
+}
+
+
+/**
+ * @param {Game} game
  * @returns {string}
  */
 function displayKey(game) {
@@ -345,6 +354,7 @@ export const Game = {
     selectKey,
     verifyKey,
     registerSuccessfulKeypress,
+    registerKeypress,
     displayKey,
     getKeyFinger
 }

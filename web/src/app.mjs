@@ -12,6 +12,8 @@ function main() {
 	renderKeysetOptions(keysetSelector, game.keyset, Object.keys(Game.Keyset));
 
 	let renderingContainer = queryRenderingContainer();
+	renderingContainer.keyText.focus();
+	renderingContainer.keyText.autofocus = true;
 	renderGame(game, renderingContainer);
 
 	let intervalID = setInterval(function tickLoop() {
@@ -29,6 +31,8 @@ function main() {
 		Game.restart(game, game.mode, newKeyset);
 		renderGame(game, renderingContainer);
 		renderingContainer.key.classList.remove("error");
+		event.target.blur();
+		renderingContainer.keyText.focus();
 	});
 
 	document.addEventListener("keydown", (event) => {
@@ -43,6 +47,7 @@ function main() {
 		if (game.state !== Game.GameState.Play) {
 			Game.start(game, game.mode, game.keyset);
 		}
+		Game.registerKeypress(game);
 		if (Game.verifyKey(game, event.key)) {
 			Game.registerSuccessfulKeypress(game);
 			Game.selectKey(game);
@@ -105,7 +110,7 @@ function queryRenderingContainer() {
  * @param {RenderingContainer} container
  */
 function renderGame(game, container) {
-	container.score.textContent = `${game.keysCorrect}/${game.keysShown}`;
+	container.score.textContent = `correct/pressed ${game.keysCorrect}/${game.keysPressed}`;
 
 	let minutes = Math.floor(game.elapsedMillis / Game.Milliseconds.minute);
 	let seconds = Math.floor((game.elapsedMillis % Game.Milliseconds.minute) / Game.Milliseconds.second);
