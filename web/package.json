@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "devDependencies": {
-    "tailwindcss": "^4.1.10"
+    "@types/bun": "^1.2.16",
+    "tailwindcss": "^4.1.10",
+    "wrangler": "^4.20.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.10"

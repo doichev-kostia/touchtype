@@ -303,6 +303,7 @@ function restart(game, mode, keyset) {
     game.startTimeMillis = game.clock.getCurrentMillis();
     game.keysShown = 0;
     game.keysCorrect = 0;
+    game.keysPressed = 0;
     game.modifiers = 0;
 
     game.selectedKey = getRandomKey(game.keyset);
