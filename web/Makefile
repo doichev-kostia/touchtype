@@ -7,8 +7,8 @@ build:
 	@bun install --frozen-lockfile
 	@make css
 
-serve:
-	@bun run ./serve.ts
+dev:
+	@bun x wrangler dev
 
 deploy:
 	@bun x wrangler deploy
