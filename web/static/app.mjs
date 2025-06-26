@@ -1,4 +1,5 @@
-import { Game } from "./game.mjs";
+import * as Game from "./game.mjs";
+import { createRealtimeClock, Milliseconds } from "./time.mjs";
 
 
 function main() {
@@ -15,11 +16,12 @@ function main() {
 	renderingContainer.keyText.focus();
 	renderingContainer.keyText.autofocus = true;
 	renderGame(game, renderingContainer);
+	const tickMillis = 1000;
 
 	let intervalID = setInterval(function tickLoop() {
-		Game.tick(game);
+		Game.tick(game, tickMillis);
 		renderGame(game, renderingContainer);
-	}, 1000);
+	}, tickMillis);
 	keysetSelector.addEventListener("change", (event) => {
 		if (!(event.target instanceof HTMLSelectElement)) {
 			throw new Error("keysetSelector is not a select element");
@@ -120,13 +122,13 @@ function queryRenderingContainer() {
 function renderGame(game, container) {
 	container.score.textContent = `correct/pressed ${game.keysCorrect}/${game.keysPressed}`;
 
-	let minutes = Math.floor(game.elapsedMillis / Game.Milliseconds.minute);
-	let seconds = Math.floor((game.elapsedMillis % Game.Milliseconds.minute) / Game.Milliseconds.second);
+	let minutes = Math.floor(game.elapsedMillis / Milliseconds.minute);
+	let seconds = Math.floor((game.elapsedMillis % Milliseconds.minute) / Milliseconds.second);
 	let minutesFmt = minutes.toString().padStart(2, "0");
 	let secondsFmt = seconds.toString().padStart(2, "0");
 	container.time.textContent = `${minutesFmt}:${secondsFmt}`;
 
-	const cpm = game.elapsedMillis === 0 ? 0 : Math.floor((game.keysCorrect / game.elapsedMillis) * Game.Milliseconds.minute);
+	const cpm = game.elapsedMillis === 0 ? 0 : Math.floor((game.keysCorrect / game.elapsedMillis) * Milliseconds.minute);
 	container.cpm.textContent = cpm.toString();
 
 	container.keyText.textContent = Game.displayKey(game);
@@ -163,17 +165,6 @@ function getFingerElements()  {
 	});
 
 	return fingerElements;
-}
-
-/**
- * @returns {Clock}
- */
-function createRealtimeClock() {
-	return {
-		getCurrentMillis() {
-			return Date.now();
-		}
-	}
 }
 
 /**

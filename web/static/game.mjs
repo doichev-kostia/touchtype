@@ -1,19 +1,19 @@
-const GameMode = {
+export const GameMode = {
     Lowercase: "Lowercase",
     MixedCase: "MixedCase",
     FingerFocus: "FingerFocus",
 };
 
-const Keyset = {
+export const Keyset = {
     Letters: "Letters",
     Numbers: "Numbers",
     Symbols: "Symbols",
     SpecialKeys: "SpecialKeys", // tab, shift, enter, ...
     Alphanumeric: "Alphanumeric", // letters, numbers
     Printable: "Printable", // letters, numbers, symbols
-}
+};
 
-const GameState = {
+export const GameState = {
     Pending: "Pending",
     Play: "Play",
     Stop: "Stop",
@@ -22,7 +22,7 @@ const GameState = {
 /**
  * @type {KeyFinger[]}
  */
-const KeyFingers = [
+export const KeyFingers = [
     "left-thumb",
     "left-index",
     "left-middle",
@@ -38,7 +38,7 @@ const KeyFingers = [
 /**
  * @type {Record<string, KeyFinger>}
  */
-const KeyFingerMap = {
+export const KeyFingerMap = {
     /* Left pinky */
     "F1": "left-pinky",
     "=": "left-pinky",
@@ -174,7 +174,7 @@ const KeyFingerMap = {
  *
  * @type {Record<keyof typeof Keyset, Array<string>>}
  */
-const Keys = {
+export const Keys = {
     [Keyset.Letters]: [
         "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
         "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
@@ -185,6 +185,8 @@ const Keys = {
     ],
     [Keyset.Symbols]: [
         "`", "~", "-", "_", "+", "=",
+        "!", "@", "#", "$", "%", "^", "&", "*",
+        "(", ")",
         "[", "]",
         "{", "}",
         ";", ":",
@@ -211,6 +213,8 @@ const Keys = {
         "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
         "u", "v", "w", "x", "y", "z",
         "`", "~", "-", "_", "+",
+        "!", "@", "#", "$", "%", "^", "&", "*",
+        "(", ")",
         "[", "]",
         "{", "}",
         ";", ":",
@@ -219,22 +223,16 @@ const Keys = {
         "<", ">",
         "/", "?",
     ],
-}
+};
 
-const Milliseconds = {
-    second: 1000,
-    minute: 60 * 1000,
-    hour: 60 * 60 * 1000,
-}
-
-const TerminatingKey = "Escape";
+export const TerminatingKey = "Escape";
 
 /**
- *	@param {number} min
- *	@param {number} max
- *	@returns {number}
+ *    @param {number} min
+ *    @param {number} max
+ *    @returns {number}
  */
-function getRandomInteger(min, max) {
+export function getRandomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -242,7 +240,7 @@ function getRandomInteger(min, max) {
  * @param {Clock} clock
  * @returns {Game}
  */
-function create(clock) {
+export function create(clock) {
     /** @type {Game} */
     let game = {
         mode: GameMode.Lowercase,
@@ -265,10 +263,11 @@ function create(clock) {
 
 /**
  * @param {Game} game
+ * @param {number} elapsedMillis
  */
-function tick(game) {
+export function tick(game, elapsedMillis) {
     if (game.state === GameState.Play) {
-        game.elapsedMillis = game.clock.getCurrentMillis() - game.startTimeMillis;
+        game.elapsedMillis += elapsedMillis;
     }
 }
 
@@ -277,17 +276,16 @@ function tick(game) {
  * @param {string} mode
  * @param {string} keyset
  */
-function start(game, mode, keyset) {
+export function start(game, mode, keyset) {
     game.mode = mode;
     game.keyset = keyset;
     game.state = GameState.Play;
-    game.elapsedMillis = 0;
 }
 
 /**
  * @param {Game} game
  */
-function stop(game) {
+export function stop(game) {
     game.state = GameState.Stop;
 }
 
@@ -296,7 +294,7 @@ function stop(game) {
  * @param {string} mode
  * @param {string} keyset
  */
-function restart(game, mode, keyset) {
+export function restart(game, mode, keyset) {
     game.mode = mode;
     game.keyset = keyset;
     game.elapsedMillis = 0;
@@ -313,7 +311,7 @@ function restart(game, mode, keyset) {
 /**
  * @param {Game} game
  */
-function selectKey(game) {
+export function selectKey(game) {
     const MAX_ITERATIONS = 30;
     let iter = 0;
     let newKey;
@@ -323,7 +321,7 @@ function selectKey(game) {
         }
         newKey = getRandomKey(game.keyset);
         iter += 1;
-    } while(game.selectedKey === newKey);
+    } while (game.selectedKey === newKey);
     game.selectedKey = newKey;
     game.keysShown += 1;
 }
@@ -333,24 +331,24 @@ function selectKey(game) {
  * @param {string} key
  * @returns {boolean}
  */
-function verifyKey(game, key) {
+export function verifyKey(game, key) {
     if (key === " ") {
-        key = "Space"
+        key = "Space";
     }
-    return game.selectedKey === key
+    return game.selectedKey === key;
 }
 
 /**
  * @param {Game} game
  */
-function registerSuccessfulKeypress(game) {
+export function registerSuccessfulKeypress(game) {
     game.keysCorrect += 1;
 }
 
 /**
  * @param {Game} game
  */
-function registerKeypress(game) {
+export function registerKeypress(game) {
     game.keysPressed += 1;
 }
 
@@ -359,7 +357,7 @@ function registerKeypress(game) {
  * @param {Game} game
  * @returns {string}
  */
-function displayKey(game) {
+export function displayKey(game) {
     // todo: apply modifiers
     if (game.selectedKey === "ArrowUp") {
         return "↑";
@@ -369,6 +367,20 @@ function displayKey(game) {
         return "←";
     } else if (game.selectedKey === "ArrowRight") {
         return "→";
+    } else if (game.selectedKey === "Backspace") {
+        return "⌫";
+    } else if (game.selectedKey === "Enter") {
+        return "↵";
+    } else if (game.selectedKey === "Space") {
+        return "␣";
+    } else if (game.selectedKey === "Shift") {
+        return "⇧";
+    } else if (game.selectedKey === "Control") {
+        return "Ctrl";
+    } else if (game.selectedKey === "Delete") {
+        return "Del";
+    } else if (game.selectedKey === "Meta") {
+        return "⌘";
     } else {
         return game.selectedKey;
     }
@@ -378,12 +390,12 @@ function displayKey(game) {
  * @param {Game} game
  * @returns {KeyFinger}
  */
-function getKeyFinger(game) {
-   let finger = KeyFingerMap[game.selectedKey];
-   if (finger == null) {
-       throw new Error(`game.getKeyFinger.finger_missing key=${game.selectedKey};`);
-   }
-   return finger;
+export function getKeyFinger(game) {
+    let finger = KeyFingerMap[game.selectedKey];
+    if (finger == null) {
+        throw new Error(`game.getKeyFinger.finger_missing key=${game.selectedKey};`);
+    }
+    return finger;
 }
 
 /**
@@ -391,7 +403,7 @@ function getKeyFinger(game) {
  * @param {string} keyset
  * @returns {string}
  */
-function getRandomKey(keyset) {
+export function getRandomKey(keyset) {
     let set = Keys[keyset];
 
     if (set.length === 0) {
@@ -402,26 +414,5 @@ function getRandomKey(keyset) {
     return set[idx];
 }
 
-export const Game = {
-    GameMode,
-    Keyset,
-    GameState,
-    KeyFingers,
-    KeyFingerMap,
-    Keys,
-    Milliseconds,
-    TerminatingKey,
-    create,
-    tick,
-    start,
-    stop,
-    restart,
-    selectKey,
-    verifyKey,
-    registerSuccessfulKeypress,
-    registerKeypress,
-    displayKey,
-    getKeyFinger
-}
 
 

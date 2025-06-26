@@ -4,9 +4,6 @@ type Hand = "left" | "right";
 
 type KeyFinger = `${Hand}-${Finger}`;
 
-interface Clock {
-	getCurrentMillis(): number
-}
 
 type Game = {
 	mode: string,
