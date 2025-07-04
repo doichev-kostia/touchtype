@@ -11,15 +11,27 @@
 <body class="bg-stone-700 text-stone-300 min-h-screen font-mono">
 <section class="flex flex-col justify-between h-full min-h-screen px-5 py-4">
     <header class="flex justify-between">
-        <div>
-            <label for="keyset" class="block text-sm/6 font-medium text-stone-300">Keyset</label>
-            <div class="mt-2 grid grid-cols-1">
-                <select id="keyset" name="keyset" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-stone-300 py-1.5 pr-8 pl-3 text-base text-stone-600 outline-1 -outline-offset-1 outline-stone-600 focus:outline-2 focus:-outline-offset-2 focus:outline-stone-600 sm:text-sm/6">
-                </select>
-                <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-stone-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
-                    <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                </svg>
+        <div class="flex flex-col gap-4">
+            <div>
+                <label for="keyset" class="block text-sm/6 font-medium text-stone-300">Keyset</label>
+                <div class="mt-2 grid grid-cols-1">
+                    <select id="keyset" name="keyset"
+                            class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-stone-300 py-1.5 pr-8 pl-3 text-base text-stone-600 outline-1 -outline-offset-1 outline-stone-600 focus:outline-2 focus:-outline-offset-2 focus:outline-stone-600 sm:text-sm/6">
+                    </select>
+                    <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-stone-500 sm:size-4"
+                         viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                        <path fill-rule="evenodd"
+                              d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                </div>
             </div>
+            <button
+                    id="modifiers-btn"
+                    class="px-3 py-1.5 text-sm bg-stone-600 hover:bg-stone-500 rounded-md text-stone-200 transition-colors"
+            >
+                Modifiers
+            </button>
         </div>
         <div>
             <p id="score">correct/pressed 0/0</p>
@@ -29,7 +41,8 @@
         </div>
     </header>
     <div class="w-full flex-1 flex justify-center items-center">
-        <div id="key" class="size-50 bg-stone-300 flex items-center justify-center rounded-xl select-none text-center" tabindex="0">
+        <div id="key" class="size-50 bg-stone-300 flex items-center justify-center rounded-xl select-none text-center"
+             tabindex="0">
             <p class="text-8xl text-stone-600" id="key-text"></p>
         </div>
     </div>
@@ -54,6 +67,131 @@
         </div>
     </div>
 </section>
+<dialog id="modifiers-dialog" class="backdrop:bg-black/50 p-0 rounded-lg bg-stone-600 text-stone-200 font-mono max-w-2xl w-full">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold">Training Modifiers</h2>
+            <button id="close-dialog" class="text-stone-400 hover:text-stone-200 text-2xl">&times;</button>
+        </div>
+
+        <!-- Mixed Case -->
+        <div class="mb-6">
+            <label class="flex items-center space-x-3 cursor-pointer">
+                <input type="checkbox" id="mixed-case" class="w-4 h-4 text-amber-500 bg-stone-700 border-stone-500 rounded focus:ring-amber-500 focus:ring-2">
+                <span class="text-sm font-medium">Mixed Case</span>
+            </label>
+            <p class="text-xs text-stone-400 ml-7 mt-1">
+                Randomly mix uppercase and lowercase letters
+            </p>
+        </div>
+
+        <!-- Finger Focus -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-medium">Finger Focus</h3>
+                <div class="space-x-2">
+                    <button id="clear-fingers" class="text-xs px-2 py-1 text-stone-300 hover:text-stone-100 border border-stone-500 rounded hover:bg-stone-500 transition-colors">
+                        Clear All
+                    </button>
+                    <button id="select-all-fingers" class="text-xs px-2 py-1 text-stone-300 hover:text-stone-100 border border-stone-500 rounded hover:bg-stone-500 transition-colors">
+                        Select All
+                    </button>
+                </div>
+            </div>
+
+            <p class="text-xs text-stone-400 mb-4">
+                Select specific fingers to focus your practice on
+            </p>
+
+            <!-- Hand Visualization -->
+            <div class="grid grid-cols-2 gap-8">
+                <!-- Left Hand -->
+                <div class="space-y-2">
+                    <h4 class="text-xs font-medium text-stone-300 text-center">Left Hand</h4>
+                    <div class="flex justify-center space-x-1">
+                        <button data-finger="4" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Left Thumb">
+                            T
+                        </button>
+                        <button data-finger="3" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Left Index">
+                            1
+                        </button>
+                        <button data-finger="2" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Left Middle">
+                            2
+                        </button>
+                        <button data-finger="1" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Left Ring">
+                            3
+                        </button>
+                        <button data-finger="0" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Left Pinky">
+                            4
+                        </button>
+                    </div>
+                    <div class="flex justify-center space-x-1 text-xs text-stone-400">
+                        <div class="w-8 text-center">T</div>
+                        <div class="w-8 text-center">1</div>
+                        <div class="w-8 text-center">2</div>
+                        <div class="w-8 text-center">3</div>
+                        <div class="w-8 text-center">4</div>
+                    </div>
+                </div>
+
+                <!-- Right Hand -->
+                <div class="space-y-2">
+                    <h4 class="text-xs font-medium text-stone-300 text-center">Right Hand</h4>
+                    <div class="flex justify-center space-x-1">
+                        <button data-finger="5" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Right Thumb">
+                            T
+                        </button>
+                        <button data-finger="6" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Right Index">
+                            1
+                        </button>
+                        <button data-finger="7" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Right Middle">
+                            2
+                        </button>
+                        <button data-finger="8" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Right Ring">
+                            3
+                        </button>
+                        <button data-finger="9" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Right Pinky">
+                            4
+                        </button>
+                    </div>
+                    <div class="flex justify-center space-x-1 text-xs text-stone-400">
+                        <div class="w-8 text-center">T</div>
+                        <div class="w-8 text-center">1</div>
+                        <div class="w-8 text-center">2</div>
+                        <div class="w-8 text-center">3</div>
+                        <div class="w-8 text-center">4</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selected fingers summary -->
+            <div id="selected-summary" class="mt-4 p-3 bg-stone-700 rounded border border-stone-500 hidden">
+                <p class="text-xs">
+                    <strong class="text-amber-400">Selected fingers:</strong>
+                    <span id="selected-list"></span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Current modifiers summary -->
+        <div class="mb-6 p-3 bg-stone-700 rounded border border-stone-500">
+            <h4 class="text-xs font-medium text-stone-300 mb-2">Active Modifiers:</h4>
+            <div id="active-modifiers" class="text-xs text-stone-400">
+                None selected
+            </div>
+        </div>
+
+        <!-- Dialog Actions -->
+        <div class="flex justify-end space-x-3">
+            <button id="cancel-dialog" class="px-4 py-2 text-sm border border-stone-500 rounded text-stone-300 hover:bg-stone-500 transition-colors">
+                Cancel
+            </button>
+            <button id="apply-modifiers" class="px-4 py-2 text-sm bg-amber-600 hover:bg-amber-500 rounded text-white transition-colors">
+                Apply
+            </button>
+        </div>
+    </div>
+</dialog>
 <script src="./app.mjs" type="module"></script>
 </body>
 </html>

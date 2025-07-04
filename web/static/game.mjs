@@ -1,3 +1,5 @@
+import { assert } from "./assert.mjs";
+
 export const GameMode = {
     Lowercase: "Lowercase",
     MixedCase: "MixedCase",
@@ -20,14 +22,15 @@ export const GameState = {
 };
 
 /**
+ * Note: the order matters
  * @type {KeyFinger[]}
  */
 export const KeyFingers = [
-    "left-thumb",
-    "left-index",
-    "left-middle",
-    "left-ring",
     "left-pinky",
+    "left-ring",
+    "left-middle",
+    "left-index",
+    "left-thumb",
     "right-thumb",
     "right-index",
     "right-middle",
@@ -36,192 +39,141 @@ export const KeyFingers = [
 ];
 
 /**
- * @type {Record<string, KeyFinger>}
- */
-export const KeyFingerMap = {
-    /* Left pinky */
-    "F1": "left-pinky",
-    "=": "left-pinky",
-    "+": "left-pinky",
-    "Tab": "left-pinky",
-    "Escape": "left-pinky",
-    "`": "left-pinky",
-    "~": "left-pinky",
-    "F2": "left-pinky",
-    "1": "left-pinky",
-    "!": "left-pinky",
-    "q": "left-pinky",
-    "a": "left-pinky",
-    "z": "left-pinky",
-    /* Left pinky */
-
-    /* Left ring */
-    "F3": "left-ring",
-    "2": "left-ring",
-    "@": "left-ring",
-    "w": "left-ring",
-    "s": "left-ring",
-    "x": "left-ring",
-    /* Left ring */
-
-    /* Left middle */
-    "F4": "left-middle",
-    "3": "left-middle",
-    "#": "left-middle",
-    "e": "left-middle",
-    "d": "left-middle",
-    "c": "left-middle",
-    "F11": "right-index", // --> 2nd layer
-    "ArrowLeft": "left-middle",
-    /* Left middle */
-
-    /* Left index */
-    "F5": "left-index",
-    "4": "left-index",
-    "$": "left-index",
-    "r": "left-index",
-    "f": "left-index",
-    "v": "left-index",
-    "F12": "right-index", // --> 2nd layer
-    "ArrowRight": "left-index",
-    "5": "left-index",
-    "%": "left-index",
-    "t": "left-index",
-    "g": "left-index",
-    "b": "left-index",
-    /* Left index */
-
-    /* Left thumb */
-    "Shift": "left-thumb",
-    "Backspace": "left-thumb",
-    "Meta": "left-thumb",
-    "Delete": "left-thumb",
-    "Alt": "left-thumb",
-    /* Left thumb */
-
-    /* Right thumb */
-    "Control": "right-thumb",
-    // "Alt": "right-thumb",
-    // "Meta": "right-thumb",
-    "Enter": "right-thumb",
-    // "Shift": "right-thumb",
-    "Space": "right-thumb",
-    /* right thumb */
-
-
-    /* Right index */
-    "6": "right-index",
-    "^": "right-index",
-    "y": "right-index",
-    "h": "right-index",
-    "n": "right-index",
-    "F6": "right-index",
-    "7": "right-index",
-    "&": "right-index",
-    "u": "right-index",
-    "j": "right-index",
-    "m": "right-index",
-    "ArrowDown": "right-index",
-    /* Right index */
-
-    /* Right middle */
-    "F7": "right-middle",
-    "8": "right-middle",
-    "*": "right-middle",
-    "i": "right-middle",
-    "k": "right-middle",
-    ",": "right-middle",
-    "<": "right-middle",
-    "ArrowUp": "right-middle",
-    /* Right middle */
-
-    /* Right ring */
-    "F8": "right-ring",
-    "9": "right-ring",
-    "(": "right-ring",
-    "o": "right-ring",
-    "l": "right-ring",
-    ".": "right-ring",
-    ">": "right-ring",
-    "[": "right-ring",
-    "{": "right-ring",
-    /* Right ring */
-
-    /* Right pinky */
-    "F9": "right-pinky",
-    "0": "right-pinky",
-    ")": "right-pinky",
-    "p": "right-pinky",
-    ";": "right-pinky",
-    ":": "right-pinky",
-    "/": "right-pinky",
-    "?": "right-pinky",
-    "]": "right-pinky",
-    "}": "right-pinky",
-    "F10": "right-pinky",
-    "-": "right-pinky",
-    "_": "right-pinky",
-    "\\": "right-pinky",
-    "|": "right-pinky",
-    "'": "right-pinky",
-    "\"": "right-pinky",
-    "PageUp": "right-pinky",
-    "PageDown": "right-pinky",
-    /* Right pinky */
-};
-
-/**
- *
- * @type {Record<keyof typeof Keyset, Array<string>>}
+ * Map of different keysets grouped by the finger
+ * @type {Record<string, Array<Array<string>>>}
  */
 export const Keys = {
     [Keyset.Letters]: [
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
-        "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
-        "u", "v", "w", "x", "y", "z",
+        // left-pinky
+        ["q", "a", "z"],
+        // left-ring
+        ["w", "s", "x"],
+        // left-middle
+        ["e", "d", "c"],
+        // left-index
+        ["r", "f", "v", "t", "g", "b"],
+        // left-thumb
+        [],
+        // right-thumb
+        [],
+        // right-index
+        ["y", "h", "n", "u", "j", "m"],
+        // right-middle
+        ["i", "k"],
+        // right-ring
+        ["o", "l"],
+        // right-pinky
+        ["p"]
     ],
     [Keyset.Numbers]: [
-        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+        // left-pinky
+        ["1"],
+        // left-ring
+        ["2"],
+        // left-middle
+        ["3"],
+        // left-index
+        ["4", "5"],
+        // left-thumb
+        [],
+        // right-thumb
+        [],
+        // right-index
+        ["6", "7"],
+        // right-middle
+        ["8"],
+        // right-ring
+        ["9"],
+        // right-pinky
+        ["0"]
     ],
     [Keyset.Symbols]: [
-        "`", "~", "-", "_", "+", "=",
-        "!", "@", "#", "$", "%", "^", "&", "*",
-        "(", ")",
-        "[", "]",
-        "{", "}",
-        ";", ":",
-        "'", "\"",
-        ",", ".",
-        "<", ">",
-        "/", "?",
-        "\\", "|",
+        // left-pinky
+        ["=", "+", "`", "~", "!"],
+        // left-ring
+        ["@"],
+        // left-middle
+        ["#"],
+        // left-index
+        ["$", "%"],
+        // left-thumb
+        [],
+        // right-thumb
+        [],
+        // right-index
+        ["^", "&"],
+        // right-middle
+        ["*", "<", ","],
+        // right-ring
+        ["(", ".", ">", "[", "{"],
+        // right-pinky
+        [")", ";", ":", "/", "?", "]", "}", "-", "_", "\\", "|", "'", "\""]
     ],
     [Keyset.SpecialKeys]: [
-        // "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",
-        "Tab", "Shift", "Enter", "Backspace", "Delete", "Meta", "Control", "Alt",
-        "Space", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
+        // left-pinky
+        ["Tab" /* "F1" */ /* "Escape" */ /* "F2" */],
+        // left-ring
+        [/* "F3" */],
+        // left-middle
+        ["ArrowLeft" /* "F4" */ /* "F11" // 2nd layer */],
+        // left-index
+        ["ArrowRight" /* "F5" */ /* "F12" // 2nd layer */],
+        // left-thumb
+        ["Shift", "Backspace", "Meta", "Delete", "Alt"],
+        // right-thumb
+        ["Control", "Alt", "Meta", "Enter", "Shift", "Space"],
+        // right-index
+        ["ArrowDown" /* "F6" */],
+        // right-middle
+        ["ArrowUp" /* "F7" */],
+        // right-ring
+        [/* "F8" */],
+        // right-pinky
+        [/* "F9" */ /* "F10" */ /* "PageUp" */ /* "PageDown" */]
     ],
     [Keyset.Alphanumeric]: [
-        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
-        "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
-        "u", "v", "w", "x", "y", "z",
+        // left-pinky
+        ["1", "q", "a", "z"],
+        // left-ring
+        ["2", "w", "s", "x"],
+        // left-middle
+        ["3", "e", "d", "c"],
+        // left-index
+        ["4", "r", "f", "v", "5", "t", "g", "b"],
+        // left-thumb
+        [],
+        // right-thumb
+        [],
+        // right-index
+        ["6", "y", "h", "n", "7", "u", "j", "m"],
+        // right-middle
+        ["8", "i", "k"],
+        // right-ring
+        ["9", "o", "l"],
+        // right-pinky
+        ["0", "p"]
     ],
     [Keyset.Printable]: [
-        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
-        "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
-        "u", "v", "w", "x", "y", "z",
-        "`", "~", "-", "_", "+",
-        "!", "@", "#", "$", "%", "^", "&", "*",
-        "(", ")",
-        "[", "]",
-        "{", "}",
-        ";", ":",
-        "'", "\"",
-        ",", ".",
-        "<", ">",
-        "/", "?",
+        // left-pinky
+        ["=", "+", "`", "~", "1", "!", "q", "a", "z"],
+        // left-ring
+        ["2", "@", "w", "s", "x"],
+        // left-middle
+        ["3", "#", "e", "d", "c"],
+        // left-index
+        ["4", "$", "r", "f", "v", "5", "%", "t", "g", "b"],
+        // left-thumb
+        [],
+        // right-thumb
+        [],
+        // right-index
+        ["6", "^",  "y", "h", "n", "7", "&", "u", "j", "m"],
+        // right-middle
+        ["8", "*", "i", "k", ",", "<"],
+        // right-ring
+        ["9", "(", "o", "l", ".", ">", "[", "{"],
+        // right-pinky
+        ["0", ")", "p", ";", ":", "/", "?", "]", "}", "-", "_", "\\", "|", "'", "\""]
     ],
 };
 
@@ -252,13 +204,64 @@ export function create(clock) {
         keysCorrect: 0,
         keysPressed: 0,
         clock,
-        selectedKey: "",
-        modifiers: 0
+        selectedKey: { key: "", finger: 0 },
+        modifiers: []
     };
-    game.selectedKey = getRandomKey(game.keyset);
+    let [k, err] = getRandomKey(game.keyset, []);
+    // the game creation is the place where the user has no control over,
+    // therefore, it's a programmer error
+    assert(err == null, `game.create.key_select_err keyset=${game.keyset};err=${err}`)
+    game.selectedKey = k
     game.keysShown += 1;
 
     return game;
+}
+
+const VERSION = 1;
+
+/**
+ * @param {Game} game
+ * @param {Storage} storage
+ *
+ */
+export function save(game, storage) {
+    let serializable = {
+            mode: game.mode,
+            keyset: game.keyset,
+            modifiers: game.modifiers,
+    }
+    let jsn = JSON.stringify(serializable)
+    storage.setItem(`game:${VERSION}`, jsn)
+}
+
+/**
+ * @param {Game} game
+ * @param {Storage} storage
+ * @returns {Error | null}
+ */
+export function load(game, storage) {
+    let data = storage.getItem(`game:${VERSION}`);
+    if (data == null) {
+        return new Error(`game.load.no_data version=${VERSION}`);
+    }
+
+    let serializable;
+    try {
+        serializable = JSON.parse(data);
+    } catch (e) {
+        return new Error(`game.load.parse_error version=${VERSION};data=${data};err=${e}`);
+    }
+
+    if (typeof game.mode === "string") {
+        game.mode = serializable.mode;
+    }
+    if (typeof game.keyset === "string") {
+        game.keyset = serializable.keyset;
+    }
+    if (Array.isArray(game.modifiers)) {
+        game.modifiers = serializable.modifiers;
+    }
+    return null
 }
 
 /**
@@ -273,12 +276,8 @@ export function tick(game, elapsedMillis) {
 
 /**
  * @param {Game} game
- * @param {string} mode
- * @param {string} keyset
  */
-export function start(game, mode, keyset) {
-    game.mode = mode;
-    game.keyset = keyset;
+export function play(game) {
     game.state = GameState.Play;
 }
 
@@ -293,8 +292,10 @@ export function stop(game) {
  * @param {Game} game
  * @param {string} mode
  * @param {string} keyset
+ * @param {Array<Modifier>} modifiers
+ * @returns {Error | null}
  */
-export function restart(game, mode, keyset) {
+export function restart(game, mode, keyset, modifiers) {
     game.mode = mode;
     game.keyset = keyset;
     game.elapsedMillis = 0;
@@ -302,26 +303,47 @@ export function restart(game, mode, keyset) {
     game.keysShown = 0;
     game.keysCorrect = 0;
     game.keysPressed = 0;
-    game.modifiers = 0;
+    game.modifiers = modifiers;
 
-    game.selectedKey = getRandomKey(game.keyset);
+    let [k, err] = getRandomKey(game.keyset, game.modifiers);
+    if (err != null) {
+        return err
+    }
+    game.selectedKey = k;
     game.keysShown += 1;
 }
 
 /**
  * @param {Game} game
+ * @returns {Error | null}
  */
 export function selectKey(game) {
     const MAX_ITERATIONS = 30;
     let iter = 0;
-    let newKey;
+    /** @type {SelectedKey} */
+    let newKey = {
+        key: "",
+        finger: 0
+    };
+    let hasFingerFocus = false;
+    for (const m of game.modifiers) {
+        if (m.type === "FingerFocus") {
+            hasFingerFocus = true;
+            break;
+        }
+    }
+
     do {
         if (iter >= MAX_ITERATIONS) {
-            throw new Error(`game.selectKey.iterations_exceeded iter=${iter};key=${game.selectedKey};keyset=${game.keyset};`);
+            return new Error(`game.selectKey.iterations_exceeded iter=${iter};key=${game.selectedKey};keyset=${game.keyset};`);
         }
-        newKey = getRandomKey(game.keyset);
+        let [k, err] = getRandomKey(game.keyset, game.modifiers);
+        if (err != null) return err
+        newKey = k
         iter += 1;
-    } while (game.selectedKey === newKey);
+        // if all you want to train is a pinky on a letter keyset, you will
+        // always get the letter "p", which is a desired behaviour
+    } while (game.selectedKey.key === newKey.key && !hasFingerFocus);
     game.selectedKey = newKey;
     game.keysShown += 1;
 }
@@ -335,7 +357,7 @@ export function verifyKey(game, key) {
     if (key === " ") {
         key = "Space";
     }
-    return game.selectedKey === key;
+    return game.selectedKey.key === key;
 }
 
 /**
@@ -358,31 +380,30 @@ export function registerKeypress(game) {
  * @returns {string}
  */
 export function displayKey(game) {
-    // todo: apply modifiers
-    if (game.selectedKey === "ArrowUp") {
+    if (game.selectedKey.key === "ArrowUp") {
         return "↑";
-    } else if (game.selectedKey === "ArrowDown") {
+    } else if (game.selectedKey.key === "ArrowDown") {
         return "↓";
-    } else if (game.selectedKey === "ArrowLeft") {
+    } else if (game.selectedKey.key === "ArrowLeft") {
         return "←";
-    } else if (game.selectedKey === "ArrowRight") {
+    } else if (game.selectedKey.key === "ArrowRight") {
         return "→";
-    } else if (game.selectedKey === "Backspace") {
+    } else if (game.selectedKey.key === "Backspace") {
         return "⌫";
-    } else if (game.selectedKey === "Enter") {
+    } else if (game.selectedKey.key === "Enter") {
         return "↵";
-    } else if (game.selectedKey === "Space") {
+    } else if (game.selectedKey.key === "Space") {
         return "␣";
-    } else if (game.selectedKey === "Shift") {
+    } else if (game.selectedKey.key === "Shift") {
         return "⇧";
-    } else if (game.selectedKey === "Control") {
+    } else if (game.selectedKey.key === "Control") {
         return "Ctrl";
-    } else if (game.selectedKey === "Delete") {
+    } else if (game.selectedKey.key === "Delete") {
         return "Del";
-    } else if (game.selectedKey === "Meta") {
+    } else if (game.selectedKey.key === "Meta") {
         return "⌘";
     } else {
-        return game.selectedKey;
+        return game.selectedKey.key;
     }
 }
 
@@ -391,28 +412,102 @@ export function displayKey(game) {
  * @returns {KeyFinger}
  */
 export function getKeyFinger(game) {
-    let finger = KeyFingerMap[game.selectedKey];
-    if (finger == null) {
-        throw new Error(`game.getKeyFinger.finger_missing key=${game.selectedKey};`);
-    }
-    return finger;
+    return KeyFingers[game.selectedKey.finger]
 }
+
+export class ErrKeysetEmpty extends Error {}
+ErrKeysetEmpty.prototype.name = "ErrKeysetEmpty";
+
+export class ErrNoKeysMatchingFilter extends Error {}
+ErrNoKeysMatchingFilter.prototype.name = "ErrNoKeysMatchingFilter";
 
 /**
  *
  * @param {string} keyset
- * @returns {string}
+ * @param {Array<Modifier>} modifiers
+ * @returns {[SelectedKey, Error | null]}
  */
-export function getRandomKey(keyset) {
+export function getRandomKey(keyset, modifiers) {
     let set = Keys[keyset];
-
-    if (set.length === 0) {
-        throw new Error(`game.getRandomKey.keyset_empty keyset=${keyset};`);
+    /** @type {SelectedKey} */
+    let result = {
+        key: "",
+        finger: 0
     }
 
-    let idx = getRandomInteger(0, set.length - 1);
-    return set[idx];
+    if (set.length === 0) {
+        return [result, new ErrKeysetEmpty()];
+    }
+
+    // Some keysets do not have keys for all the fingers.
+    // For instance, there are no numbers or letters for thumbs
+    // Therefore, we need to filter those out
+    /** @type {Array<number>} */
+    let fingersWithKeys = []
+    for (let i = 0; i < set.length; i += 1) {
+        if (set[i].length > 0) {
+            fingersWithKeys.push(i)
+        }
+    }
+
+    let finger = -1
+    let isUppercase = false;
+    for (const m of modifiers) {
+        if (m.type === "FingerFocus") {
+            if (m.fingers.length === 0) continue
+            // The user's filter can be too strict, and the keyset they chose
+            // may not have the keys for their "focused" fingers
+            /** @type {Array<number>} */
+            let fingersIntersection = []
+            for (const f of m.fingers) {
+                for (const ff of fingersWithKeys) {
+                    if (ff === f) {
+                        fingersIntersection.push(f)
+                        break
+                    }
+                }
+            }
+            if (fingersIntersection.length === 0) {
+                return [result, new ErrNoKeysMatchingFilter()];
+            }
+
+            let idx = getRandomInteger(0, fingersIntersection.length - 1)
+            finger = fingersIntersection[idx]
+        } else if (m.type === "MixedCase") {
+            isUppercase = Math.random() > 0.5;
+        }
+    }
+
+    if (finger === -1) {
+        let idx = getRandomInteger(0, fingersWithKeys.length - 1);
+        finger = fingersWithKeys[idx];
+    }
+    result.finger = finger
+
+    let keys = set[finger];
+    assert(Array.isArray(keys), `game.get_random_key.finger_not_defined_in_keyset keyset=${keyset};finger=${finger}`)
+    // the filtering work above should've found a definite match or already
+    // returned with an error
+    assert(keys.length > 0, `game.get_random_key.no_keys_for_finger keyset=${keyset};finger=${finger}`)
+
+    let idx = getRandomInteger(0, keys.length - 1);
+    result.key = keys[idx];
+    assert(typeof result.key === "string", `game.get_random_key.invalid_key keyset=${keyset};finger=${finger};idx=${idx};key=${result.key}`)
+
+    if (isUppercase && isLetter(result.key)) {
+        result.key = result.key.toUpperCase()
+    }
+
+    return [result, null]
 }
 
+/**
+ *
+ * @param {string} key
+ * @returns {boolean}
+ */
+function isLetter(key)  {
+    return ('a' <= key && key <= 'z') || ('A' <= key && key <= 'Z');
+}
 
 

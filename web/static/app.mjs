@@ -1,16 +1,26 @@
 import * as Game from "./game.mjs";
 import { createRealtimeClock, Milliseconds } from "./time.mjs";
+import { isDomElementAvailable } from "./dom.mjs";
+import { setupModifiers } from "./dialog.mjs";
 
 
 function main() {
 	let rtClock = createRealtimeClock();
 	let game = Game.create(rtClock);
+	let logger = console;
+
+	let err;
+	err = Game.load(game, localStorage)
+	if (err != null){
+		logger.error(err, "app.load_game_err");
+	}
 
 	let keysetSelector = document.querySelector("#keyset");
 	if (!isDomElementAvailable(keysetSelector, HTMLSelectElement)) {
 		throw new Error("keyset select is not available");
 	}
 	renderKeysetOptions(keysetSelector, game.keyset, Object.keys(Game.Keyset));
+	setupModifiers()
 
 	let renderingContainer = queryRenderingContainer();
 	renderingContainer.keyText.focus();
@@ -18,10 +28,23 @@ function main() {
 	renderGame(game, renderingContainer);
 	const tickMillis = 1000;
 
-	let intervalID = setInterval(function tickLoop() {
+	function tickLoop() {
 		Game.tick(game, tickMillis);
 		renderGame(game, renderingContainer);
-	}, tickMillis);
+	}
+	let intervalID = setInterval(tickLoop, tickMillis);
+	window.addEventListener("beforeunload", () => {
+		Game.save(game, localStorage)
+		clearInterval(intervalID);
+	})
+	document.addEventListener('visibilitychange', () => {
+		if (document.hidden) {
+			clearInterval(intervalID);
+		} else {
+			intervalID = setInterval(tickLoop, tickMillis);
+		}
+	});
+
 	keysetSelector.addEventListener("change", (event) => {
 		if (!(event.target instanceof HTMLSelectElement)) {
 			throw new Error("keysetSelector is not a select element");
@@ -30,7 +53,12 @@ function main() {
 		if (!(newKeyset in Game.Keyset)) {
 			throw new Error(`Invalid keyset: ${newKeyset}`);
 		}
-		Game.restart(game, game.mode, newKeyset);
+		let err = Game.restart(game, game.mode, newKeyset, game.modifiers);
+		if (err != null) {
+			logger.error(err, `app.keyset_change.restart_err keyset=${newKeyset}`)
+			displayError(err)
+			return
+		}
 		renderGame(game, renderingContainer);
 		renderingContainer.key.classList.remove("error");
 		event.target.blur();
@@ -55,12 +83,17 @@ function main() {
 			return;
 		}
 		if (game.state !== Game.GameState.Play) {
-			Game.start(game, game.mode, game.keyset);
+			Game.play(game);
 		}
 		Game.registerKeypress(game);
 		if (Game.verifyKey(game, event.key)) {
 			Game.registerSuccessfulKeypress(game);
-			Game.selectKey(game);
+			let err = Game.selectKey(game);
+			if (err != null) {
+				logger.error(err, `app.keydown.select_key_err key=${event.key}`);
+				displayError(err);
+				return;
+			}
 		} else {
 			renderingContainer.key.classList.add("error");
 			setTimeout(() => {
@@ -142,19 +175,11 @@ function renderGame(game, container) {
 	}
 }
 
-/**
- * @template T
- * @param {Element | null} element
- * @param {new (...args: any[]) => T} target
- * @returns {element is T}
- */
-function isDomElementAvailable(element, target) {
-	return element instanceof target;
-}
+
 
 /** @returns {Record<KeyFinger, HTMLElement>} */
 function getFingerElements()  {
-	/** @type {Record<KeyFinger, HTMLElement>} */
+	/** @type {Record<string, HTMLElement>} */
 	let fingerElements = {};
 	Game.KeyFingers.forEach((finger) => {
 		const fingerElement = document.querySelector(`#${finger}`);
@@ -183,3 +208,18 @@ function renderKeysetOptions(selectElement, selectedKeyset, keysets) {
 		selectElement.appendChild(option);
 	}
 }
+
+/**
+ *
+ * @param {Error} err
+ */
+function displayError(err) {
+	if (err instanceof Game.ErrKeysetEmpty) {
+		alert("The chosen keyset has no keys in it")
+	} else if (err instanceof Game.ErrNoKeysMatchingFilter) {
+		alert("There are no keys that match your filter in the chosen keyset")
+	} else {
+		alert(`An error occurred: ${err.message}`);
+	}
+}
+

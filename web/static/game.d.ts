@@ -4,6 +4,21 @@ type Hand = "left" | "right";
 
 type KeyFinger = `${Hand}-${Finger}`;
 
+type ModifierMixedCase = {
+	type: "MixedCase",
+}
+
+type ModifierFingerFocus = {
+	type: "FingerFocus",
+	fingers: number[], // finger idx, starting from the left pinky
+}
+
+type Modifier = ModifierMixedCase | ModifierFingerFocus
+
+type SelectedKey = {
+	key: string;
+	finger: number
+}
 
 type Game = {
 	mode: string,
@@ -15,6 +30,6 @@ type Game = {
 	startTimeMillis: number,
 	elapsedMillis: number,
 	clock: Clock,
-	selectedKey: string,
-	modifiers: number // bitset?
+	selectedKey: SelectedKey,
+	modifiers: Array<Modifier>
 }
