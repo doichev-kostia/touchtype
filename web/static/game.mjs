@@ -217,6 +217,50 @@ export function create(clock) {
     return game;
 }
 
+/**
+ *
+ * @param {Game} game
+ * @param {Modifier} modifier
+ */
+export function upsertModifier(game, modifier) {
+    if (game.modifiers.length === 0) {
+        game.modifiers.push(modifier)
+    }
+
+    let existingModifierIdx = -1;
+    for (let i = 0; i < game.modifiers.length; i += 1) {
+        if (game.modifiers[i].type === modifier.type) {
+            existingModifierIdx = i;
+            break
+        }
+    }
+    if (existingModifierIdx === -1) {
+        game.modifiers.push(modifier);
+    } else {
+        game.modifiers[existingModifierIdx] = modifier
+    }
+}
+
+/**
+ *
+ * @param {Game} game
+ * @param {string} type
+ */
+export function removeModifier(game, type) {
+    for (let i = 0; i < game.modifiers.length; i += 1) {
+        if (game.modifiers[i].type !== type) continue
+
+        if (game.modifiers.length === 1) {
+            game.modifiers.length = 0;
+        } else {
+            let len = game.modifiers.length
+            game.modifiers[i] = game.modifiers[len - 1]
+            game.modifiers.length -= 1;
+        }
+        return
+    }
+}
+
 const VERSION = 1;
 
 /**

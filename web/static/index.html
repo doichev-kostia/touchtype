@@ -89,14 +89,6 @@
         <div class="mb-6">
             <div class="flex items-center justify-between mb-3">
                 <h3 class="text-sm font-medium">Finger Focus</h3>
-                <div class="space-x-2">
-                    <button id="clear-fingers" class="text-xs px-2 py-1 text-stone-300 hover:text-stone-100 border border-stone-500 rounded hover:bg-stone-500 transition-colors">
-                        Clear All
-                    </button>
-                    <button id="select-all-fingers" class="text-xs px-2 py-1 text-stone-300 hover:text-stone-100 border border-stone-500 rounded hover:bg-stone-500 transition-colors">
-                        Select All
-                    </button>
-                </div>
             </div>
 
             <p class="text-xs text-stone-400 mb-4">
@@ -104,33 +96,33 @@
             </p>
 
             <!-- Hand Visualization -->
-            <div class="grid grid-cols-2 gap-8">
+            <div class="grid grid-cols-2 gap-8" id="fingers-container">
                 <!-- Left Hand -->
                 <div class="space-y-2">
                     <h4 class="text-xs font-medium text-stone-300 text-center">Left Hand</h4>
                     <div class="flex justify-center space-x-1">
-                        <button data-finger="4" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Left Thumb">
+                        <button data-finger="4" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 transition-all" title="Left Thumb">
+                            P
+                        </button>
+                        <button data-finger="3" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 transition-all" title="Left Index">
+                            R
+                        </button>
+                        <button data-finger="2" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 transition-all" title="Left Middle">
+                            M
+                        </button>
+                        <button data-finger="1" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 transition-all" title="Left Ring">
+                            I
+                        </button>
+                        <button data-finger="0" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 transition-all" title="Left Pinky">
                             T
-                        </button>
-                        <button data-finger="3" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Left Index">
-                            1
-                        </button>
-                        <button data-finger="2" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Left Middle">
-                            2
-                        </button>
-                        <button data-finger="1" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Left Ring">
-                            3
-                        </button>
-                        <button data-finger="0" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Left Pinky">
-                            4
                         </button>
                     </div>
                     <div class="flex justify-center space-x-1 text-xs text-stone-400">
-                        <div class="w-8 text-center">T</div>
                         <div class="w-8 text-center">1</div>
                         <div class="w-8 text-center">2</div>
                         <div class="w-8 text-center">3</div>
                         <div class="w-8 text-center">4</div>
+                        <div class="w-8 text-center">5</div>
                     </div>
                 </div>
 
@@ -142,24 +134,24 @@
                             T
                         </button>
                         <button data-finger="6" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Right Index">
-                            1
+                            I
                         </button>
                         <button data-finger="7" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Right Middle">
-                            2
+                            M
                         </button>
                         <button data-finger="8" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Right Ring">
-                            3
+                            R
                         </button>
                         <button data-finger="9" class="finger-btn w-8 h-12 text-xs rounded-t-full border-2 border-stone-500 bg-stone-700 text-stone-300 hover:bg-stone-600 transition-all" title="Right Pinky">
-                            4
+                            P
                         </button>
                     </div>
                     <div class="flex justify-center space-x-1 text-xs text-stone-400">
-                        <div class="w-8 text-center">T</div>
-                        <div class="w-8 text-center">1</div>
-                        <div class="w-8 text-center">2</div>
-                        <div class="w-8 text-center">3</div>
-                        <div class="w-8 text-center">4</div>
+                        <div class="w-8 text-center">6</div>
+                        <div class="w-8 text-center">7</div>
+                        <div class="w-8 text-center">8</div>
+                        <div class="w-8 text-center">9</div>
+                        <div class="w-8 text-center">10</div>
                     </div>
                 </div>
             </div>
@@ -171,24 +163,6 @@
                     <span id="selected-list"></span>
                 </p>
             </div>
-        </div>
-
-        <!-- Current modifiers summary -->
-        <div class="mb-6 p-3 bg-stone-700 rounded border border-stone-500">
-            <h4 class="text-xs font-medium text-stone-300 mb-2">Active Modifiers:</h4>
-            <div id="active-modifiers" class="text-xs text-stone-400">
-                None selected
-            </div>
-        </div>
-
-        <!-- Dialog Actions -->
-        <div class="flex justify-end space-x-3">
-            <button id="cancel-dialog" class="px-4 py-2 text-sm border border-stone-500 rounded text-stone-300 hover:bg-stone-500 transition-colors">
-                Cancel
-            </button>
-            <button id="apply-modifiers" class="px-4 py-2 text-sm bg-amber-600 hover:bg-amber-500 rounded text-white transition-colors">
-                Apply
-            </button>
         </div>
     </div>
 </dialog>

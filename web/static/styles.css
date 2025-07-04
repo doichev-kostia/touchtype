@@ -408,6 +408,9 @@
     border-style: var(--tw-border-style);
     border-width: 2px;
   }
+  .border-amber-600 {
+    border-color: var(--color-amber-600);
+  }
   .border-stone-500 {
     border-color: var(--color-stone-500);
   }
