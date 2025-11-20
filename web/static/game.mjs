@@ -377,6 +377,24 @@ export function selectKey(game) {
         }
     }
 
+    // Find out how many keys are available for the selected finger
+    // If there is only 1 key, we will not shuffle the set of keys shown
+    let totalKeys = Keys[game.keyset].length;
+    for (const m of game.modifiers) {
+        if (m.type === "FingerFocus") {
+            // no fingers specified -> no purpose to filter
+            if (m.fingers.length === 0) break;
+
+            totalKeys = 0;
+            for (const f of m.fingers) {
+                let fingerKeys = Keys[game.keyset][f];
+                assert(Array.isArray(fingerKeys), "game.select_key.no_finger_keys")
+                totalKeys += fingerKeys.length
+            }
+        }
+    }
+
+
     do {
         if (iter >= MAX_ITERATIONS) {
             return new Error(`game.selectKey.iterations_exceeded iter=${iter};key=${game.selectedKey};keyset=${game.keyset};`);
@@ -385,9 +403,7 @@ export function selectKey(game) {
         if (err != null) return err
         newKey = k
         iter += 1;
-        // if all you want to train is a pinky on a letter keyset, you will
-        // always get the letter "p", which is a desired behaviour
-    } while (game.selectedKey.key === newKey.key && !hasFingerFocus);
+    } while (game.selectedKey.key === newKey.key && totalKeys > 1);
     game.selectedKey = newKey;
     game.keysShown += 1;
 }
